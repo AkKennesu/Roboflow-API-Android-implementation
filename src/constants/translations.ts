@@ -61,6 +61,14 @@ export const translations = {
         savedSuccess: 'Result saved to history!',
         saveError: 'Failed to save result.',
 
+        // Disease Details
+        severity: 'Severity',
+        symptoms: 'Symptoms',
+        causes: 'Causes',
+        treatment: 'Treatment',
+        prevention: 'Prevention',
+        earlyDetection: 'Early Detection',
+
         // Image Selector
         saveToGallery: 'Save photo to gallery',
         gallery: 'Gallery',
@@ -131,6 +139,14 @@ export const translations = {
         saveResult: 'I-save ang Resulta',
         savedSuccess: 'Na-save na sa kasaysayan!',
         saveError: 'Nabigong i-save ang resulta.',
+
+        // Disease Details
+        severity: 'Kalubhaan',
+        symptoms: 'Mga Sintomas',
+        causes: 'Mga Sanhi',
+        treatment: 'Paggamot',
+        prevention: 'Pag-iwas',
+        earlyDetection: 'Maagang Pagtuklas',
 
         // Image Selector
         saveToGallery: 'I-save sa gallery',
