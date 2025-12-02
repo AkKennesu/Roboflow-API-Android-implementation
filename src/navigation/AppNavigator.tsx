@@ -37,10 +37,10 @@ export const AppNavigator = () => {
                 user.emailVerified ? (
                     <>
                         <Stack.Screen name="Home" component={HomeScreen} />
-                        <Stack.Screen name="Detection" component={DetectionScreen} options={{ headerShown: true, title: 'Rice Disease Detector', headerBackTitle: 'Home' }} />
-                        <Stack.Screen name="Diseases" component={DiseasesScreen} options={{ headerShown: true, title: 'Palay Diseases' }} />
-                        <Stack.Screen name="Weather" component={WeatherScreen} options={{ headerShown: true, title: 'Weather Info' }} />
-                        <Stack.Screen name="Location" component={LocationScreen} options={{ headerShown: true, title: 'My Location' }} />
+                        <Stack.Screen name="Detection" component={DetectionScreen} options={{ headerShown: false }} />
+                        <Stack.Screen name="Diseases" component={DiseasesScreen} options={{ headerShown: false }} />
+                        <Stack.Screen name="Weather" component={WeatherScreen} options={{ headerShown: false }} />
+                        <Stack.Screen name="Location" component={LocationScreen} options={{ headerShown: false }} />
                         <Stack.Screen name="DiseaseDetail" component={DiseaseDetailScreen} />
                         <Stack.Screen name="Profile" component={ProfileScreen} />
                         <Stack.Screen name="EditProfile" component={EditProfileScreen} />

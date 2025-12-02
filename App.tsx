@@ -1,28 +1,39 @@
 import './global.css';
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { HeroUINativeProvider } from 'heroui-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { AuthProvider } from './src/context/AuthContext';
-import { SettingsProvider } from './src/context/SettingsContext';
+import { SettingsProvider, useSettings } from './src/context/SettingsContext';
+
+const AppContent = () => {
+  const { darkMode } = useSettings();
+
+  console.log('App Render - Dark Mode:', darkMode);
+  return (
+    <View key={darkMode ? "dark" : "light"} style={{ flex: 1 }} className={darkMode ? "dark" : ""}>
+      <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} backgroundColor={darkMode ? "#000" : "#fff"} />
+      <AuthProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </AuthProvider>
+    </View>
+  );
+};
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <HeroUINativeProvider>
-          <SettingsProvider>
-            <AuthProvider>
-              <NavigationContainer>
-                <StatusBar barStyle="dark-content" />
-                <AppNavigator />
-              </NavigationContainer>
-            </AuthProvider>
-          </SettingsProvider>
-        </HeroUINativeProvider>
+        <SettingsProvider>
+          <HeroUINativeProvider>
+            <AppContent />
+          </HeroUINativeProvider>
+        </SettingsProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

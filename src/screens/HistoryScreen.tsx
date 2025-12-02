@@ -6,10 +6,19 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
 import { getUserHistory, HistoryItem } from '../services/history';
 import { Spinner } from 'heroui-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSettings } from '../context/SettingsContext';
+import { translateText } from '../services/TranslationService';
+
+type RootStackParamList = {
+    HistoryDetail: { item: HistoryItem };
+    [key: string]: any;
+};
 
 export const HistoryScreen = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const { user } = useAuth();
+    const { darkMode, language, translations: t } = useSettings();
     const [history, setHistory] = useState<HistoryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -36,43 +45,57 @@ export const HistoryScreen = () => {
         fetchHistory();
     };
 
-    const renderItem = ({ item }: { item: HistoryItem }) => {
+    // Component to render individual history items with translation
+    const HistoryItemCard = ({ item }: { item: HistoryItem }) => {
         const topPrediction = item.predictions[0];
         const date = new Date(item.timestamp).toLocaleDateString();
         const time = new Date(item.timestamp).toLocaleTimeString();
+        const [translatedClass, setTranslatedClass] = useState(topPrediction.class);
+
+        useEffect(() => {
+            const translate = async () => {
+                if (language === 'tl') {
+                    const translated = await translateText(topPrediction.class, 'tl');
+                    setTranslatedClass(translated);
+                } else {
+                    setTranslatedClass(topPrediction.class);
+                }
+            };
+            translate();
+        }, [topPrediction.class, language]);
 
         return (
             <TouchableOpacity
-                className="bg-white rounded-2xl p-4 mb-4 shadow-sm border border-gray-100 flex-row"
-                onPress={() => navigation.navigate('HistoryDetail' as never, { item } as never)}
+                className={`rounded-2xl p-4 mb-4 shadow-sm border flex-row ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"}`}
+                onPress={() => navigation.navigate('HistoryDetail', { item })}
             >
                 <Image
                     source={{ uri: item.imageUrl }}
-                    className="w-20 h-20 rounded-xl bg-gray-200"
+                    className={`w-20 h-20 rounded-xl ${darkMode ? "bg-gray-700" : "bg-gray-200"}`}
                     resizeMode="cover"
                 />
                 <View className="flex-1 ml-4 justify-center">
-                    <Text className="text-lg font-bold text-gray-800 capitalize">{topPrediction.class}</Text>
-                    <Text className="text-green-600 font-bold text-sm mb-1">
-                        {(topPrediction.confidence * 100).toFixed(1)}% Confidence
+                    <Text className={`text-lg font-bold capitalize ${darkMode ? "text-white" : "text-gray-800"}`}>{translatedClass}</Text>
+                    <Text className={`font-bold text-sm mb-1 ${darkMode ? "text-green-400" : "text-green-600"}`}>
+                        {(topPrediction.confidence * 100).toFixed(1)}% {t.confidence}
                     </Text>
-                    <Text className="text-gray-400 text-xs">{date} • {time}</Text>
+                    <Text className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-400"}`}>{date} • {time}</Text>
                 </View>
                 <View className="justify-center">
-                    <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+                    <Ionicons name="chevron-forward" size={20} color={darkMode ? "#9ca3af" : "#9ca3af"} />
                 </View>
             </TouchableOpacity>
         );
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }} className="bg-gray-50" edges={['top', 'left', 'right']}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#f9fafb' }} edges={['top', 'left', 'right']}>
             {/* Header */}
             <View className="px-6 py-4 flex-row items-center mb-2">
-                <TouchableOpacity onPress={() => navigation.goBack()} className="bg-white p-2 rounded-full shadow-sm">
-                    <Ionicons name="arrow-back" size={24} color="#374151" />
+                <TouchableOpacity onPress={() => navigation.goBack()} className={`p-2 rounded-full shadow-sm ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+                    <Ionicons name="arrow-back" size={24} color={darkMode ? "#e5e7eb" : "#374151"} />
                 </TouchableOpacity>
-                <Text className="text-xl font-bold text-gray-800 ml-4">Diseases History</Text>
+                <Text className={`text-xl font-bold ml-4 ${darkMode ? "text-white" : "text-gray-800"}`}>{t.diseasesHistoryTitle}</Text>
             </View>
 
             {loading ? (
@@ -82,20 +105,20 @@ export const HistoryScreen = () => {
             ) : (
                 <FlatList
                     data={history}
-                    renderItem={renderItem}
+                    renderItem={({ item }) => <HistoryItemCard item={item} />}
                     keyExtractor={item => item.id}
                     contentContainerStyle={{ padding: 20 }}
                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={darkMode ? "#ffffff" : "#000000"} />
                     }
                     ListEmptyComponent={
                         <View className="items-center justify-center mt-20">
-                            <View className="w-20 h-20 bg-gray-100 rounded-full items-center justify-center mb-4">
+                            <View className={`w-20 h-20 rounded-full items-center justify-center mb-4 ${darkMode ? "bg-gray-800" : "bg-gray-100"}`}>
                                 <Ionicons name="time-outline" size={40} color="#9ca3af" />
                             </View>
-                            <Text className="text-gray-500 text-lg font-bold">No history yet</Text>
+                            <Text className={`text-lg font-bold ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{t.noHistory}</Text>
                             <Text className="text-gray-400 text-center mt-2 px-10">
-                                Scan your plants to detect diseases and save them here.
+                                {t.scanToSave}
                             </Text>
                         </View>
                     }

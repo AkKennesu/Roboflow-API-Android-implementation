@@ -4,34 +4,42 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import * as Location from 'expo-location';
 
+import { useSettings } from '../context/SettingsContext';
+
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
+
 export const LocationScreen = () => {
-    const [location, setLocation] = useState<Location.LocationObject | null>(null);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const navigation = useNavigation();
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { darkMode } = useSettings();
 
-    useEffect(() => {
-        (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
 
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
-        })();
-    }, []);
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
 
-    if (!location) {
-        return (
-            <SafeAreaView style={{ flex: 1 }} className="bg-background items-center justify-center">
-                <ActivityIndicator size="large" color="#006FEE" />
-                <Text className="text-default-500 mt-2">Locating you...</Text>
-                {errorMsg && <Text className="text-danger mt-2">{errorMsg}</Text>}
-            </SafeAreaView>
-        );
-    }
+  if (!location) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#f9fafb' }} className="items-center justify-center">
+        <ActivityIndicator size="large" color="#006FEE" />
+        <Text className={`mt-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Locating you...</Text>
+        {errorMsg && <Text className="text-danger mt-2">{errorMsg}</Text>}
+      </SafeAreaView>
+    );
+  }
 
-    const htmlContent = `
+  const htmlContent = `
     <!DOCTYPE html>
     <html>
       <head>
@@ -58,13 +66,20 @@ export const LocationScreen = () => {
     </html>
   `;
 
-    return (
-        <SafeAreaView style={{ flex: 1 }} className="bg-background" edges={['top', 'left', 'right']}>
-            <WebView
-                originWhitelist={['*']}
-                source={{ html: htmlContent }}
-                style={{ flex: 1 }}
-            />
-        </SafeAreaView>
-    );
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#f9fafb' }} edges={['top', 'left', 'right']}>
+      {/* Header */}
+      <View className="px-6 py-4 flex-row items-center mb-2">
+        <TouchableOpacity onPress={() => navigation.goBack()} className={`p-2 rounded-full shadow-sm ${darkMode ? "bg-gray-800" : "bg-white"}`}>
+          <Ionicons name="arrow-back" size={24} color={darkMode ? "#e5e7eb" : "#374151"} />
+        </TouchableOpacity>
+        <Text className={`text-xl font-bold ml-4 ${darkMode ? "text-white" : "text-gray-800"}`}>My Location</Text>
+      </View>
+      <WebView
+        originWhitelist={['*']}
+        source={{ html: htmlContent }}
+        style={{ flex: 1 }}
+      />
+    </SafeAreaView>
+  );
 };

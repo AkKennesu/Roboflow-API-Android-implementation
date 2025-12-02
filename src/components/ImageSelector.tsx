@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Image, Alert, Text, Switch } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { MediaTypeOptions, MediaType } from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'heroui-native';
+import { useSettings } from '../context/SettingsContext';
 
 interface ImageSelectorProps {
     onImageSelected: (uri: string) => void;
@@ -14,6 +14,7 @@ interface ImageSelectorProps {
 export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, selectedImage }) => {
     const [saveToGallery, setSaveToGallery] = useState(false);
     const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+    const { darkMode, translations: t } = useSettings();
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -31,7 +32,7 @@ export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, s
     const takePhoto = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Permission denied', 'Sorry, we need camera permissions to make this work!');
+            Alert.alert(t.permissionDenied, t.permissionMessage);
             return;
         }
 
@@ -54,10 +55,10 @@ export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, s
                         }
                     }
                     await MediaLibrary.createAssetAsync(result.assets[0].uri);
-                    Alert.alert('Saved', 'Photo saved to gallery!');
+                    Alert.alert('Saved', t.savedToGallery);
                 } catch (error) {
                     console.error('Error saving photo:', error);
-                    Alert.alert('Error', 'Failed to save photo to gallery.');
+                    Alert.alert('Error', t.errorSaving);
                 }
             }
         }
@@ -65,19 +66,19 @@ export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, s
 
     return (
         <View className="items-center justify-center w-full my-5">
-            <View className="w-72 h-72 rounded-2xl overflow-hidden bg-default-100 mb-5 border border-default-200 justify-center items-center">
+            <View className={`w-72 h-72 rounded-2xl overflow-hidden mb-5 border justify-center items-center ${darkMode ? "bg-gray-700 border-gray-600" : "bg-default-100 border-default-200"}`}>
                 {selectedImage ? (
                     <Image source={{ uri: selectedImage }} className="w-full h-full" />
                 ) : (
                     <View className="flex-1 justify-center items-center">
-                        <Ionicons name="image-outline" size={60} className="text-default-400" />
-                        <Text className="text-default-400 text-base mt-2">No Image Selected</Text>
+                        <Ionicons name="image-outline" size={60} color={darkMode ? "#9ca3af" : "#a1a1aa"} />
+                        <Text className={`text-base mt-2 ${darkMode ? "text-gray-400" : "text-default-400"}`}>{t.noImageSelected}</Text>
                     </View>
                 )}
             </View>
 
             <View className="flex-row items-center justify-between w-full px-4 mb-4">
-                <Text className="text-default-600 font-medium">Save photo to gallery</Text>
+                <Text className={`font-medium ${darkMode ? "text-white" : "text-default-600"}`}>{t.saveToGallery}</Text>
                 <Switch
                     value={saveToGallery}
                     onValueChange={setSaveToGallery}
@@ -92,7 +93,7 @@ export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, s
                     className="flex-1 bg-blue-500 flex-row items-center justify-center gap-2"
                 >
                     <Ionicons name="images" size={20} color="white" />
-                    <Text className="text-white font-medium">Gallery</Text>
+                    <Text className="text-white font-medium">{t.gallery}</Text>
                 </Button>
 
                 <Button
@@ -100,7 +101,7 @@ export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, s
                     className="flex-1 bg-green-500 flex-row items-center justify-center gap-2"
                 >
                     <Ionicons name="camera" size={20} color="white" />
-                    <Text className="text-white font-medium">Camera</Text>
+                    <Text className="text-white font-medium">{t.camera}</Text>
                 </Button>
             </View>
         </View>
