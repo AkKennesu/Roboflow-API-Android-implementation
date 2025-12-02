@@ -21,6 +21,7 @@ export const translations = {
         viewNearbyScans: 'View nearby scans',
         diseasesHistory: 'Diseases History',
         viewPastScans: 'View past scans',
+
         // Weather
         weatherTitle: 'Weather Info',
         analyzingWeather: 'Analyzing weather conditions...',
@@ -36,14 +37,6 @@ export const translations = {
         clouds: 'Clouds',
         wind: 'Wind',
         airQuality: 'Air Quality',
-
-        // Disease Detail
-        symptoms: 'Symptoms',
-        causes: 'Causes',
-        treatment: 'Treatment',
-        prevention: 'Prevention',
-        earlyDetection: 'Early Detection is Crucial',
-        severity: 'Severity',
 
         // History & Camera
         diseasesHistoryTitle: 'Diseases History',
@@ -99,6 +92,7 @@ export const translations = {
         viewNearbyScans: 'Tingnan ang mga scan',
         diseasesHistory: 'Kasaysayan',
         viewPastScans: 'Nakaraang mga scan',
+
         // Weather
         weatherTitle: 'Impormasyon sa Panahon',
         analyzingWeather: 'Sinusuri ang panahon...',
@@ -108,20 +102,12 @@ export const translations = {
         diseaseAdviser: 'Payo sa Sakit',
         currentConditions: 'Kasalukuyang Kondisyon',
         forecast: 'Pagtataya sa 7 Araw',
-        humidity: 'Alinsangan',
-        visibility: 'Visibility',
+        humidity: 'Halumigmig',
+        visibility: 'Bisibilidad',
         pressure: 'Presyon',
         clouds: 'Ulap',
         wind: 'Hangin',
         airQuality: 'Kalidad ng Hangin',
-
-        // Disease Detail
-        symptoms: 'Mga Sintomas',
-        causes: 'Mga Sanhi',
-        treatment: 'Paggamot',
-        prevention: 'Pag-iwas',
-        earlyDetection: 'Mahalaga ang Maagang Pagtuklas',
-        severity: 'Tindi',
 
         // History & Camera
         diseasesHistoryTitle: 'Kasaysayan ng Sakit',

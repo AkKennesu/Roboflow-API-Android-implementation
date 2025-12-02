@@ -35,11 +35,11 @@ export const SettingsScreen = () => {
             ]
         },
         appInfo: {
-            title: 'About Agri-Scan',
+            title: 'About Leaf-Detective',
             type: 'text' as const,
             content: `Dear User,
 
-Welcome to Agri-Scan.
+Welcome to Leaf-Detective.
 
 I am AkKennesu, the developer of this application. This project uses advanced AI to help you identify rice plant diseases quickly and accurately.
 
@@ -196,7 +196,7 @@ AkKennesu`
                         <Ionicons name="information-circle-outline" size={22} color="#22c55e" />
                     </View>
                     <View className="flex-1">
-                        <Text className={`font-bold text-base ${darkMode ? "text-white" : "text-gray-800"}`}>About Agri-Scan</Text>
+                        <Text className={`font-bold text-base ${darkMode ? "text-white" : "text-gray-800"}`}>About Leaf-Detective</Text>
                         <Text className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Version 1.0.0</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
