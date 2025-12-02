@@ -1,59 +1,40 @@
 # Rice Disease Detector
 
-A React Native application powered by Roboflow for detecting diseases in rice plants. This app allows users to scan rice plant leaves, detect diseases, view detailed treatment recommendations, and track their scan history.
+A React Native application powered by Roboflow for detecting diseases in rice plants. This app allows users to scan rice plant leaves, detect diseases, view detailed treatment recommendations, and track their scan history. It also features real-time weather updates, AI-driven disease advice, and multi-language support (English/Tagalog).
 
 ## 🛠️ Tools Used
 
 - **Framework**: [React Native](https://reactnative.dev/) (Expo)
 - **Language**: TypeScript
 - **UI Library**: [HeroUI](https://www.heroui.com/) (Native), Tailwind CSS (NativeWind)
-- **Backend/Database**: Firebase (Auth, Firestore)
+- **Backend/Database**: Firebase (Auth, Firestore, Storage)
 - **AI/ML**: [Roboflow](https://roboflow.com/) (Computer Vision API)
 - **Navigation**: React Navigation
 - **Icons**: Expo Vector Icons (Ionicons)
+- **Maps**: Leaflet (via `react-native-webview`)
 
 ## 🤖 API Integration
 
-This project uses the **Roboflow Inference API** to detect diseases.
+### 1. Roboflow Inference API (Disease Detection)
+Used to analyze images of rice leaves and detect diseases like Rice Blast, Brown Spot, etc.
+- **Endpoint**: `https://serverless.roboflow.com`
+- **Configuration**: Requires API Key and Model ID in `src/config.ts`.
 
-### Configuration
-The API configuration is located in `src/config.ts`. You need a Roboflow API Key and Model ID.
+### 2. Open-Meteo API (Weather)
+Fetches real-time weather data to provide agricultural insights.
+- **Endpoint**: `https://api.open-meteo.com/v1/forecast`
+- **Features**: Current temperature, humidity, wind speed, cloud cover, and 7-day forecast.
+- **No API Key required.**
 
-```typescript
-export const CONFIG = {
-    ROBOFLOW_API_KEY: "YOUR_API_KEY",
-    ROBOFLOW_MODEL_ID: "agri-scan-2-vrp1u/1", // Example Model ID
-    ROBOFLOW_API_URL: "https://serverless.roboflow.com",
-};
-```
+### 3. Google Translate (Dynamic Translation)
+Provides on-the-fly translation for dynamic content (like weather descriptions and disease advice) into Tagalog.
+- **Endpoint**: `https://translate.googleapis.com/translate_a/single` (Free endpoint)
+- **Usage**: Translates API responses that are returned in English.
 
-### How it works
-1.  **Image Capture**: The user selects an image from the gallery or camera.
-2.  **Base64 Conversion**: The image is converted to a Base64 string.
-3.  **API Request**: A POST request is sent to the Roboflow API with the image data and confidence threshold.
-
-**Sample Code (`src/services/api.ts`):**
-
-```typescript
-const detectDisease = async (imageUri: string, confidence: number) => {
-    const base64 = await FileSystem.readAsStringAsync(imageUri, { encoding: 'base64' });
-    
-    const url = `${CONFIG.ROBOFLOW_API_URL}/${CONFIG.ROBOFLOW_MODEL_ID}`;
-    
-    const response = await axios({
-        method: "POST",
-        url: url,
-        params: {
-            api_key: CONFIG.ROBOFLOW_API_KEY,
-            confidence: confidence,
-        },
-        data: base64,
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    });
-
-    return response.data.predictions;
-};
-```
+### 4. Expo Modules
+- **Expo Location**: Fetches user coordinates for local weather and mapping.
+- **Expo Image Picker**: Accesses camera and gallery for scanning leaves.
+- **Expo Media Library**: Saves scanned images and results to the device gallery.
 
 ## 🚀 How to Use
 
@@ -88,10 +69,13 @@ const detectDisease = async (imageUri: string, confidence: number) => {
 ## 📱 Features
 
 - **Disease Detection**: Real-time detection of Rice Blast, Bacterial Leaf Blight, Brown Spot, etc.
+- **AI Disease Adviser**: Provides advice based on current weather conditions to prevent disease outbreaks.
+- **Multi-Language Support**: Full support for English and Tagalog (UI and Dynamic Content).
 - **Detailed Info**: View causes, treatments, and prevention tips for detected diseases.
 - **History**: Save and view past detection results.
 - **Weather**: Check local weather conditions (requires location permission).
-- **Authentication**: Secure login and signup using Firebase.
+- **Authentication**: Secure login, signup, and profile management using Firebase.
+- **Dark Mode**: Fully supported dark theme for low-light usage.
 
 ## 📄 License
 
