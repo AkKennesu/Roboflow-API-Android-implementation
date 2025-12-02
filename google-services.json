@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "155369869924",
+    "project_id": "riceplant-diseases",
+    "storage_bucket": "riceplant-diseases.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155369869924:android:653c06d8341ff83dc08571",
+        "android_client_info": {
+          "package_name": "com.knnsu.RiceDiseaseDetector"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "155369869924-j2fe3ugtomb0gmeg5dmc6gju1i7n8fqo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.knnsu.RiceDiseaseDetector",
+            "certificate_hash": "3f6a5a6ce038e02c2e514ecb778098c1ae6af254"
+          }
+        },
+        {
+          "client_id": "155369869924-p9d5ifi4piijbudalddbq9bj4omla2i5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkCZpqfymCYHdtT2FMV_1hpBF3lH67f5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "155369869924-p9d5ifi4piijbudalddbq9bj4omla2i5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,10 +21,35 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.knnsu.RiceDiseaseDetector",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you select images for disease detection.",
+          "cameraPermission": "The app accesses your camera to let you take photos of rice plants."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow RiceDiseaseDetector to save photos to your gallery.",
+          "savePhotosPermission": "Allow RiceDiseaseDetector to save photos to your gallery.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      "@react-native-google-signin/google-signin"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3fa42706-3d7c-4c7b-9697-5deaeb21f16f"
+      }
     }
   }
 }
