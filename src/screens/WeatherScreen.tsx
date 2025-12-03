@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Location from 'expo-location';
 import axios from 'axios';
@@ -7,6 +7,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useSettings } from '../context/SettingsContext';
 import { translateText } from '../services/TranslationService';
+import { ProfileAvatarButton } from '../components/ProfileAvatarButton';
+
+// Components
+import { WeatherHero } from '../components/weather/WeatherHero';
+import { DiseaseAdviceCard } from '../components/weather/DiseaseAdviceCard';
+import { WeatherGrid } from '../components/weather/WeatherGrid';
+import { ForecastList } from '../components/weather/ForecastList';
 
 interface WeatherData {
     current: {
@@ -128,14 +135,6 @@ export const WeatherScreen = () => {
         fetchData();
     };
 
-    const getWeatherIcon = (code: number) => {
-        if (code <= 3) return 'sunny';
-        if (code <= 48) return 'cloudy';
-        if (code <= 67) return 'rainy';
-        if (code <= 77) return 'snow';
-        return 'thunderstorm';
-    };
-
     const getDiseaseAdvice = (w: WeatherData) => {
         const { relative_humidity_2m, temperature_2m, precipitation, wind_speed_10m } = w.current;
 
@@ -199,15 +198,15 @@ export const WeatherScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#f9fafb' }} edges={['top', 'left', 'right']}>
             {/* Header */}
-            <View className="px-6 py-4 flex-row items-center mb-2">
-                <TouchableOpacity onPress={() => navigation.goBack()} className={`p-2 rounded-full shadow-sm ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                    <Ionicons name="arrow-back" size={24} color={darkMode ? "#e5e7eb" : "#374151"} />
-                </TouchableOpacity>
-                <Text className={`text-xl font-bold ml-4 ${darkMode ? "text-white" : "text-gray-800"}`}>{t.weatherTitle}</Text>
+            <View className="px-6 py-4 flex-row items-center justify-center mb-2 relative">
+                <View className="absolute left-6 z-10">
+                    <ProfileAvatarButton />
+                </View>
+                <Text className={`text-xl font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>{t.weatherTitle}</Text>
             </View>
 
             <ScrollView
-                contentContainerStyle={{ padding: 20 }}
+                contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={darkMode ? "#ffffff" : "#000000"} />}
             >
                 <View className="items-center mb-6">
@@ -217,81 +216,35 @@ export const WeatherScreen = () => {
 
                 {weather && (
                     <>
-                        {/* Hero Section */}
-                        <View className="items-center mb-8">
-                            <Ionicons name={getWeatherIcon(weather.current.weather_code) as any} size={100} color="#f59e0b" />
-                            <Text className={`text-7xl font-bold mt-2 ${darkMode ? "text-white" : "text-gray-800"}`}>
-                                {Math.round(weather.current.temperature_2m)}°
-                            </Text>
-                            <Text className={`text-lg ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                                {t.feelsLike} {Math.round(weather.current.apparent_temperature)}°
-                            </Text>
-                            <View className={`px-4 py-1 rounded-full mt-3 ${darkMode ? "bg-blue-900/30" : "bg-blue-100"}`}>
-                                <Text className={`font-medium ${darkMode ? "text-blue-400" : "text-blue-700"}`}>
-                                    {weatherDescription || '...'}
-                                </Text>
-                            </View>
-                        </View>
+                        <WeatherHero
+                            weather={weather}
+                            weatherDescription={weatherDescription}
+                            darkMode={darkMode}
+                            t={t}
+                        />
 
-                        {/* AI Disease Adviser */}
-                        {adviceBase && (
-                            <View className={`p-5 rounded-2xl mb-6 border shadow-sm ${adviceBase.color} ${darkMode ? "border-gray-700" : "border-gray-100"}`}>
-                                <View className="flex-row items-center mb-2">
-                                    <Ionicons name={adviceBase.icon as any} size={24} className={adviceBase.textColor} />
-                                    <Text className={`font-bold text-lg ml-2 ${adviceBase.textColor}`}>{t.diseaseAdviser}</Text>
-                                </View>
-                                <Text className={`font-bold text-base mb-1 ${adviceBase.textColor}`}>
-                                    {translatedAdvice?.risk || adviceBase.risk}
-                                </Text>
-                                <Text className={`leading-5 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                                    {translatedAdvice?.advice || adviceBase.advice}
-                                </Text>
-                            </View>
-                        )}
+                        <DiseaseAdviceCard
+                            adviceBase={adviceBase}
+                            translatedAdvice={translatedAdvice}
+                            darkMode={darkMode}
+                            t={t}
+                        />
 
-                        {/* Detailed Grid */}
-                        <Text className={`text-xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-800"}`}>{t.currentConditions}</Text>
-                        <View className="flex-row flex-wrap justify-between gap-3 mb-8">
-                            <WeatherCard darkMode={darkMode} icon="water-outline" title={t.humidity} value={`${weather.current.relative_humidity_2m}%`} color="text-blue-500" />
-                            <WeatherCard darkMode={darkMode} icon="eye-outline" title={t.visibility} value={`${(weather.current.visibility / 1000).toFixed(1)} km`} color="text-gray-500" />
-                            <WeatherCard darkMode={darkMode} icon="speedometer-outline" title={t.pressure} value={`${weather.current.surface_pressure} hPa`} color="text-purple-500" />
-                            <WeatherCard darkMode={darkMode} icon="cloud-outline" title={t.clouds} value={`${weather.current.cloud_cover}%`} color="text-gray-500" />
-                            <WeatherCard darkMode={darkMode} icon="flag-outline" title={t.wind} value={`${weather.current.wind_speed_10m} km/h`} color="text-teal-500" />
-                            <WeatherCard darkMode={darkMode} icon="leaf-outline" title={t.airQuality} value={aqi ? `${aqi} AQI` : '--'} color="text-green-500" />
-                        </View>
+                        <WeatherGrid
+                            weather={weather}
+                            aqi={aqi}
+                            darkMode={darkMode}
+                            t={t}
+                        />
 
-                        {/* 7-Day Forecast */}
-                        <Text className={`text-xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-800"}`}>{t.forecast}</Text>
-                        {weather.daily.time.map((time, index) => (
-                            <View key={index} className={`flex-row justify-between items-center p-4 rounded-xl mb-2 border shadow-sm ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"}`}>
-                                <Text className={`font-medium w-24 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                                    {new Date(time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                                </Text>
-                                <View className="flex-row items-center gap-4">
-                                    <Text className={`font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>
-                                        {Math.round(weather.daily.temperature_2m_max[index])}°
-                                    </Text>
-                                    <Text className="text-gray-400">
-                                        {Math.round(weather.daily.temperature_2m_min[index])}°
-                                    </Text>
-                                </View>
-                                <View className="flex-row items-center w-16 justify-end">
-                                    <Ionicons name="water-outline" size={14} color="#3b82f6" />
-                                    <Text className="text-blue-500 text-xs ml-1">{weather.daily.precipitation_sum[index]}mm</Text>
-                                </View>
-                            </View>
-                        ))}
+                        <ForecastList
+                            weather={weather}
+                            darkMode={darkMode}
+                            t={t}
+                        />
                     </>
                 )}
             </ScrollView>
         </SafeAreaView>
     );
 };
-
-const WeatherCard = ({ icon, title, value, color, darkMode }: { icon: any, title: string, value: string, color: string, darkMode: boolean }) => (
-    <View className={`w-[31%] p-3 rounded-xl items-center border shadow-sm ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"}`}>
-        <Ionicons name={icon} size={24} className={color} />
-        <Text className={`text-xs mt-1 mb-1 ${darkMode ? "text-gray-400" : "text-gray-400"}`}>{title}</Text>
-        <Text className={`font-bold text-sm ${darkMode ? "text-white" : "text-gray-800"}`}>{value}</Text>
-    </View>
-);

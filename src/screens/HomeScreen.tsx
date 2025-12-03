@@ -13,48 +13,7 @@ export const HomeScreen = () => {
     const { user, userData } = useAuth();
     const { darkMode, language, translations: t } = useSettings();
 
-    const features = [
-        {
-            title: t.ricePlantDiseases,
-            subtitle: t.dictionary,
-            icon: 'book',
-            screen: 'Diseases',
-            color: 'bg-orange-400',
-            iconColor: 'text-orange-400',
-        },
-        {
-            title: t.camera,
-            subtitle: t.scan,
-            icon: 'camera',
-            screen: 'Detection',
-            color: 'bg-green-500',
-            iconColor: 'text-green-500',
-        },
-        {
-            title: t.weatherInfo,
-            subtitle: t.checkWeather,
-            icon: 'cloud-outline',
-            screen: 'Weather',
-            color: 'bg-blue-400',
-            iconColor: 'text-blue-400',
-        },
-        {
-            title: t.myLocation,
-            subtitle: t.viewNearbyScans,
-            icon: 'location',
-            screen: 'Location',
-            color: 'bg-pink-500',
-            iconColor: 'text-pink-500',
-        },
-        {
-            title: t.diseasesHistory,
-            subtitle: t.viewPastScans,
-            icon: 'time',
-            screen: 'History',
-            color: 'bg-purple-500',
-            iconColor: 'text-purple-500',
-        },
-    ];
+
 
     const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -81,24 +40,12 @@ export const HomeScreen = () => {
 
             <ScrollView contentContainerStyle={{ padding: 20 }}>
                 {/* Grid */}
-                <View className="flex-row flex-wrap justify-between gap-4">
-                    {features.map((feature, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            className={`w-[47%] aspect-square rounded-3xl ${feature.color} p-5 justify-between shadow-lg`}
-                            onPress={() => navigation.navigate(feature.screen)}
-                        >
-                            <View className="bg-white/20 w-14 h-14 rounded-2xl items-center justify-center backdrop-blur-md">
-                                <View className="bg-white w-10 h-10 rounded-xl items-center justify-center">
-                                    <Ionicons name={feature.icon as any} size={24} className={feature.iconColor} />
-                                </View>
-                            </View>
-                            <View>
-                                <Text className="text-white text-lg font-bold leading-tight">{feature.title}</Text>
-                                <Text className="text-white/80 text-xs mt-1">{feature.subtitle}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    ))}
+                {/* Content Placeholder */}
+                <View className="flex-1 items-center justify-center mt-20">
+                    <Ionicons name="home-outline" size={64} color={darkMode ? "#374151" : "#e5e7eb"} />
+                    <Text className={`mt-4 text-lg ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                        {t.home}
+                    </Text>
                 </View>
             </ScrollView>
 

@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
+import { useSettings } from '../context/SettingsContext';
+
+// Components
+import { AuthForm } from '../components/auth/AuthForm';
+import { SocialAuth } from '../components/auth/SocialAuth';
 
 const getFriendlyErrorMessage = (error: any) => {
     const code = error.code;
@@ -22,8 +27,6 @@ const getFriendlyErrorMessage = (error: any) => {
     return error.message; // Fallback
 };
 
-import { useSettings } from '../context/SettingsContext';
-
 export const AuthScreen = () => {
     const navigation = useNavigation<any>();
     const { signIn, signUp, signInWithGoogle } = useAuth();
@@ -32,7 +35,6 @@ export const AuthScreen = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
     const { darkMode } = useSettings();
 
     const handleAuth = async () => {
@@ -87,87 +89,23 @@ export const AuthScreen = () => {
                         </Text>
                     </View>
 
-                    {/* Form */}
-                    <View className="gap-4">
-                        {!isLogin && (
-                            <View>
-                                <Text className={`font-medium mb-2 ml-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>Full Name</Text>
-                                <View className={`p-4 rounded-2xl border ${darkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-200"}`}>
-                                    <TextInput
-                                        placeholder="Enter your full name"
-                                        placeholderTextColor={darkMode ? "#9ca3af" : "#9ca3af"}
-                                        value={name}
-                                        onChangeText={setName}
-                                        className={`text-base ${darkMode ? "text-white" : "text-gray-800"}`}
-                                    />
-                                </View>
-                            </View>
-                        )}
+                    <AuthForm
+                        isLogin={isLogin}
+                        name={name}
+                        setName={setName}
+                        email={email}
+                        setEmail={setEmail}
+                        password={password}
+                        setPassword={setPassword}
+                        loading={loading}
+                        handleAuth={handleAuth}
+                        darkMode={darkMode}
+                    />
 
-                        <View>
-                            <Text className={`font-medium mb-2 ml-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>Email Address</Text>
-                            <View className={`p-4 rounded-2xl border ${darkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-200"}`}>
-                                <TextInput
-                                    placeholder="Enter your email"
-                                    placeholderTextColor={darkMode ? "#9ca3af" : "#9ca3af"}
-                                    value={email}
-                                    onChangeText={setEmail}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    className={`text-base ${darkMode ? "text-white" : "text-gray-800"}`}
-                                />
-                            </View>
-                        </View>
-
-                        <View>
-                            <Text className={`font-medium mb-2 ml-1 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>Password</Text>
-                            <View className={`p-4 rounded-2xl border flex-row items-center ${darkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-200"}`}>
-                                <TextInput
-                                    placeholder="Enter your password"
-                                    placeholderTextColor={darkMode ? "#9ca3af" : "#9ca3af"}
-                                    value={password}
-                                    onChangeText={setPassword}
-                                    secureTextEntry={!showPassword}
-                                    className={`text-base flex-1 ${darkMode ? "text-white" : "text-gray-800"}`}
-                                />
-                                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                                    <Ionicons name={showPassword ? "eye-outline" : "eye-off-outline"} size={20} color="#9ca3af" />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        {isLogin && (
-                            <TouchableOpacity className="items-end">
-                                <Text className={`font-bold ${darkMode ? "text-green-400" : "text-green-600"}`}>Forgot Password?</Text>
-                            </TouchableOpacity>
-                        )}
-
-                        <TouchableOpacity
-                            className={`py-4 rounded-2xl shadow-lg items-center mt-4 ${darkMode ? "bg-green-600 shadow-green-900/20" : "bg-green-500 shadow-green-200"}`}
-                            onPress={handleAuth}
-                            disabled={loading}
-                        >
-                            <Text className="text-white font-bold text-lg">
-                                {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Divider */}
-                    <View className="flex-row items-center my-8">
-                        <View className={`flex-1 h-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
-                        <Text className={`mx-4 ${darkMode ? "text-gray-500" : "text-gray-400"}`}>Or continue with</Text>
-                        <View className={`flex-1 h-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-200"}`} />
-                    </View>
-
-                    {/* Social Auth */}
-                    <TouchableOpacity
-                        className={`flex-row items-center justify-center border py-4 rounded-2xl gap-3 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
-                        onPress={handleGoogleAuth}
-                    >
-                        <Ionicons name="logo-google" size={24} color="#ea4335" />
-                        <Text className={`font-bold text-base ${darkMode ? "text-white" : "text-gray-700"}`}>Google</Text>
-                    </TouchableOpacity>
+                    <SocialAuth
+                        handleGoogleAuth={handleGoogleAuth}
+                        darkMode={darkMode}
+                    />
 
                     {/* Toggle */}
                     <View className="flex-row justify-center mt-8">

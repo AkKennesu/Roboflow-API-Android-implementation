@@ -9,6 +9,12 @@ export const translations = {
         logOut: 'Log Out',
         version: 'Version',
 
+        // Navigation
+        navDisease: 'Disease',
+        navWeather: 'Weather',
+        navLocation: 'Location',
+        navHistory: 'History',
+
         // Home
         home: 'Home',
         ricePlantDiseases: 'Rice Plant Diseases',
@@ -87,6 +93,12 @@ export const translations = {
         darkMode: 'Dark Mode',
         logOut: 'Mag-log Out',
         version: 'Bersyon',
+
+        // Navigation
+        navDisease: 'Sakit',
+        navWeather: 'Panahon',
+        navLocation: 'Lokasyon',
+        navHistory: 'Kasaysayan',
 
         // Home
         home: 'Tahanan',

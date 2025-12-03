@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { AuthProvider } from './src/context/AuthContext';
 import { SettingsProvider, useSettings } from './src/context/SettingsContext';
+import { SidebarProvider } from './src/context/SidebarContext';
 
 const AppContent = () => {
   const { darkMode } = useSettings();
@@ -31,7 +32,9 @@ export default function App() {
       <SafeAreaProvider>
         <SettingsProvider>
           <HeroUINativeProvider>
-            <AppContent />
+            <SidebarProvider>
+              <AppContent />
+            </SidebarProvider>
           </HeroUINativeProvider>
         </SettingsProvider>
       </SafeAreaProvider>

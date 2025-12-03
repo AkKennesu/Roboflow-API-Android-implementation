@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../config/firebase';
@@ -7,8 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
-
 import { useSettings } from '../context/SettingsContext';
+
+// Components
+import { AvatarUploader } from '../components/profile/AvatarUploader';
+import { ProfileForm } from '../components/profile/ProfileForm';
 
 export const EditProfileScreen = () => {
     const navigation = useNavigation();
@@ -78,56 +81,20 @@ export const EditProfileScreen = () => {
             </View>
 
             <ScrollView contentContainerStyle={{ padding: 24 }}>
-                {/* Avatar Edit */}
-                <View className="items-center mb-10">
-                    <TouchableOpacity onPress={pickImage} className={`w-32 h-32 rounded-full items-center justify-center mb-4 shadow-lg border-4 relative overflow-hidden ${darkMode ? "bg-green-700 border-gray-800" : "bg-green-500 border-white"}`}>
-                        {image || userData?.avatar ? (
-                            <Image source={{ uri: image || userData?.avatar }} className="w-full h-full" />
-                        ) : (
-                            <Text className="text-white text-5xl font-bold">{name.charAt(0).toUpperCase() || 'U'}</Text>
-                        )}
-                        <View className={`absolute bottom-0 right-0 left-0 h-8 items-center justify-center bg-black/30`}>
-                            <Ionicons name="camera" size={16} color="white" />
-                        </View>
-                    </TouchableOpacity>
-                    <Text className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Tap circle to change photo</Text>
-                </View>
+                <AvatarUploader
+                    image={image}
+                    currentAvatar={userData?.avatar}
+                    name={name}
+                    onPickImage={pickImage}
+                    darkMode={darkMode}
+                />
 
-                {/* Form Fields */}
-                <View className="gap-5">
-                    <View>
-                        <View className={`p-4 rounded-2xl border flex-row items-center ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
-                            <View className={`w-10 h-10 rounded-full items-center justify-center mr-3 ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}>
-                                <Ionicons name="at" size={20} color={darkMode ? "#9ca3af" : "#6b7280"} />
-                            </View>
-                            <View className="flex-1">
-                                <Text className={`text-xs font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Username</Text>
-                                <TextInput
-                                    value={username}
-                                    editable={false}
-                                    className={`font-semibold text-base p-0 mt-1 ${darkMode ? "text-gray-300" : "text-gray-800"}`}
-                                />
-                            </View>
-                            <Ionicons name="lock-closed-outline" size={20} color="#9ca3af" />
-                        </View>
-                    </View>
-
-                    <View>
-                        <View className={`p-4 rounded-2xl border flex-row items-center ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
-                            <View className={`w-10 h-10 rounded-full items-center justify-center mr-3 ${darkMode ? "bg-green-900/30" : "bg-green-50"}`}>
-                                <Ionicons name="person-outline" size={20} color={darkMode ? "#4ade80" : "#22c55e"} />
-                            </View>
-                            <View className="flex-1">
-                                <Text className={`text-xs font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Full Name</Text>
-                                <TextInput
-                                    value={name}
-                                    onChangeText={setName}
-                                    className={`font-semibold text-base p-0 mt-1 ${darkMode ? "text-white" : "text-gray-800"}`}
-                                />
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                <ProfileForm
+                    name={name}
+                    setName={setName}
+                    username={username}
+                    darkMode={darkMode}
+                />
 
                 {/* Save Button */}
                 <TouchableOpacity
