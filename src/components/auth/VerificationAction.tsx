@@ -12,20 +12,20 @@ export const VerificationAction = ({ loading, onCheckVerification, onLogout, dar
     return (
         <>
             <TouchableOpacity
-                className={`w-full py-4 rounded-2xl shadow-lg items-center mb-4 ${darkMode ? "bg-green-600 shadow-green-900/20" : "bg-green-500 shadow-green-200"}`}
+                className={`w-full py-3 rounded-xl shadow-sm items-center ${darkMode ? "bg-green-600 shadow-green-900/20" : "bg-green-500 shadow-green-200"}`}
                 onPress={onCheckVerification}
                 disabled={loading}
             >
-                <Text className="text-white font-bold text-lg">
+                <Text className="text-white font-bold text-base">
                     {loading ? 'Checking...' : "I've Verified My Email"}
                 </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-                className="py-4"
+                className={`w-full py-3 rounded-xl shadow-sm items-center mt-3 bg-red-500 shadow-red-200`}
                 onPress={onLogout}
             >
-                <Text className={`font-medium ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Sign Out / Change Email</Text>
+                <Text className="text-white font-bold text-base">Sign Out</Text>
             </TouchableOpacity>
         </>
     );

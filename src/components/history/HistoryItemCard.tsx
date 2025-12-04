@@ -10,9 +10,12 @@ interface HistoryItemCardProps {
     language: string;
     t: any;
     onPress: () => void;
+    onLongPress?: () => void;
+    isSelectionMode?: boolean;
+    isSelected?: boolean;
 }
 
-export const HistoryItemCard = ({ item, darkMode, language, t, onPress }: HistoryItemCardProps) => {
+export const HistoryItemCard = ({ item, darkMode, language, t, onPress, onLongPress, isSelectionMode = false, isSelected = false }: HistoryItemCardProps) => {
     const topPrediction = item.predictions[0];
     const date = new Date(item.timestamp).toLocaleDateString();
     const time = new Date(item.timestamp).toLocaleTimeString();
@@ -32,9 +35,21 @@ export const HistoryItemCard = ({ item, darkMode, language, t, onPress }: Histor
 
     return (
         <TouchableOpacity
-            className={`rounded-2xl p-4 mb-4 shadow-sm border flex-row ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"}`}
+            className={`rounded-2xl p-4 mb-4 shadow-sm border flex-row items-center ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-100"
+                } ${isSelected ? (darkMode ? "bg-red-900/20 border-red-500/50" : "bg-red-50 border-red-500") : ""}`}
             onPress={onPress}
+            onLongPress={onLongPress}
+            delayLongPress={300}
         >
+            {isSelectionMode && (
+                <View className="mr-3">
+                    <Ionicons
+                        name={isSelected ? "checkbox" : "square-outline"}
+                        size={24}
+                        color={isSelected ? "#ef4444" : (darkMode ? "#6b7280" : "#9ca3af")}
+                    />
+                </View>
+            )}
             <Image
                 source={{ uri: item.imageUrl }}
                 className={`w-20 h-20 rounded-xl ${darkMode ? "bg-gray-700" : "bg-gray-200"}`}

@@ -74,10 +74,14 @@ export const AuthScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#ffffff' }}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 24, justifyContent: 'center' }}>
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1, padding: 24, justifyContent: 'center' }}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
 
                     {/* Header */}
-                    <View className="items-center mb-10">
+                    <View className="items-center mb-6">
                         <View className={`w-20 h-20 rounded-3xl items-center justify-center mb-4 rotate-3 ${darkMode ? "bg-green-900/30" : "bg-green-100"}`}>
                             <Ionicons name="leaf" size={40} color={darkMode ? "#4ade80" : "#22c55e"} />
                         </View>

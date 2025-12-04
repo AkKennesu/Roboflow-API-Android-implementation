@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, RefreshControl } from 'react-native';
+import { View, Text, FlatList, RefreshControl, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
-import { getUserHistory, HistoryItem } from '../services/history';
+import { getUserHistory, HistoryItem, deleteHistoryItem } from '../services/history';
 import { Spinner } from 'heroui-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSettings } from '../context/SettingsContext';
@@ -23,6 +23,8 @@ export const HistoryScreen = () => {
     const [history, setHistory] = useState<HistoryItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [isSelectionMode, setIsSelectionMode] = useState(false);
+    const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
 
     const fetchHistory = async () => {
         if (!user) return;
@@ -46,14 +48,139 @@ export const HistoryScreen = () => {
         fetchHistory();
     };
 
+    const handleDelete = async (itemId: string) => {
+        Alert.alert(
+            t.deleteTitle || "Delete Item",
+            t.deleteConfirm || "Are you sure you want to delete this item?",
+            [
+                { text: t.cancel || "Cancel", style: "cancel" },
+                {
+                    text: t.delete || "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            await deleteHistoryItem(itemId);
+                            setHistory(prev => prev.filter(item => item.id !== itemId));
+                            if (isSelectionMode) {
+                                setSelectedItems(prev => {
+                                    const next = new Set(prev);
+                                    next.delete(itemId);
+                                    return next;
+                                });
+                            }
+                        } catch (error) {
+                            console.error("Failed to delete item:", error);
+                            alert("Failed to delete item.");
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
+    const handleBatchDelete = async () => {
+        if (selectedItems.size === 0) return;
+
+        Alert.alert(
+            t.deleteTitle || "Delete Items",
+            `Are you sure you want to delete ${selectedItems.size} items?`,
+            [
+                { text: t.cancel || "Cancel", style: "cancel" },
+                {
+                    text: t.delete || "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            setLoading(true);
+                            const promises = Array.from(selectedItems).map(id => deleteHistoryItem(id));
+                            await Promise.all(promises);
+
+                            setHistory(prev => prev.filter(item => !selectedItems.has(item.id)));
+                            setSelectedItems(new Set());
+                            setIsSelectionMode(false);
+                        } catch (error) {
+                            console.error("Failed to batch delete:", error);
+                            alert("Failed to delete some items.");
+                        } finally {
+                            setLoading(false);
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
+    const toggleSelectionMode = () => {
+        setIsSelectionMode(!isSelectionMode);
+        setSelectedItems(new Set());
+    };
+
+    const toggleItemSelection = (itemId: string) => {
+        setSelectedItems(prev => {
+            const next = new Set(prev);
+            if (next.has(itemId)) {
+                next.delete(itemId);
+            } else {
+                next.add(itemId);
+            }
+            return next;
+        });
+    };
+
+    const handleItemPress = (item: HistoryItem) => {
+        if (isSelectionMode) {
+            toggleItemSelection(item.id);
+        } else {
+            navigation.navigate('HistoryDetail', { item });
+        }
+    };
+
+    const handleItemLongPress = (item: HistoryItem) => {
+        if (isSelectionMode) {
+            toggleItemSelection(item.id);
+        } else {
+            // Enter selection mode and select this item
+            setIsSelectionMode(true);
+            const newSet = new Set<string>();
+            newSet.add(item.id);
+            setSelectedItems(newSet);
+        }
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#f9fafb' }} edges={['top', 'left', 'right']}>
             {/* Header */}
-            <View className="px-6 py-4 flex-row items-center justify-center mb-2 relative">
-                <View className="absolute left-6 z-10">
-                    <ProfileAvatarButton />
+            <View className="px-6 py-4 flex-row items-center justify-between mb-2 relative">
+                <View className="flex-row items-center">
+                    {!isSelectionMode && <ProfileAvatarButton />}
+                    {isSelectionMode && (
+                        <TouchableOpacity onPress={toggleSelectionMode}>
+                            <Text className={`text-lg font-medium ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                                {t.cancel || "Cancel"}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
-                <Text className={`text-xl font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>{t.diseasesHistoryTitle}</Text>
+
+                <Text className={`text-xl font-bold absolute left-0 right-0 text-center -z-10 ${darkMode ? "text-white" : "text-gray-800"}`}>
+                    {isSelectionMode ? `${selectedItems.size} Selected` : t.diseasesHistoryTitle}
+                </Text>
+
+                <TouchableOpacity
+                    onPress={isSelectionMode ? handleBatchDelete : toggleSelectionMode}
+                    disabled={isSelectionMode && selectedItems.size === 0}
+                >
+                    {isSelectionMode ? (
+                        <Text className={`text-lg font-bold ${selectedItems.size > 0 ? "text-red-500" : "text-gray-400"
+                            }`}>
+                            {t.delete || "Delete"} {selectedItems.size > 0 ? `(${selectedItems.size})` : ""}
+                        </Text>
+                    ) : (
+                        <View className={`p-2 rounded-full ${darkMode ? "bg-gray-800" : "bg-gray-100"}`}>
+                            <Ionicons name="trash-outline" size={22} color={darkMode ? "#ef4444" : "#ef4444"} />
+                        </View>
+                    )}
+                </TouchableOpacity>
             </View>
 
             {loading ? (
@@ -69,7 +196,10 @@ export const HistoryScreen = () => {
                             darkMode={darkMode}
                             language={language}
                             t={t}
-                            onPress={() => navigation.navigate('HistoryDetail', { item })}
+                            onPress={() => handleItemPress(item)}
+                            onLongPress={() => handleItemLongPress(item)}
+                            isSelectionMode={isSelectionMode}
+                            isSelected={selectedItems.has(item.id)}
                         />
                     )}
                     keyExtractor={item => item.id}
