@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
-          "client_id": "155369869924-j2fe3ugtomb0gmeg5dmc6gju1i7n8fqo.apps.googleusercontent.com",
+          "client_id": "155369869924-3012r0a1s8k2o4uesp6je9ll0sb9sfa0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.knnsu.RiceDiseaseDetector",
-            "certificate_hash": "3f6a5a6ce038e02c2e514ecb778098c1ae6af254"
+            "certificate_hash": "110d6ba95ef576f8b13b3ac4c3f5c40d228c57b2"
+          }
+        },
+        {
+          "client_id": "155369869924-kk563j7io37u0n7qf7a7opp595hcqd4h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.knnsu.RiceDiseaseDetector",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d3ac4c3f5c40d228c57b2"
+          }
+        },
+        {
+          "client_id": "155369869924-vr2f89mqkevrluonj91fj6gnpaf95rvb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.knnsu.RiceDiseaseDetector",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {

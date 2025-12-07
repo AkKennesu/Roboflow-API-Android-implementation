@@ -168,7 +168,7 @@ export const ProfileSidebar = ({ visible, onClose }: ProfileSidebarProps) => {
                 duration: 300,
                 easing: Easing.in(Easing.cubic),
                 useNativeDriver: true,
-            });
+            }).start(() => setShowModal(false));
         }
     }, [visible]);
 

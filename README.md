@@ -2,39 +2,62 @@
 
 A React Native application powered by Roboflow for detecting diseases in rice plants. This app allows users to scan rice plant leaves, detect diseases, view detailed treatment recommendations, and track their scan history. It also features real-time weather updates, AI-driven disease advice, and multi-language support (English/Tagalog).
 
-## 🛠️ Tools Used
+## 🛠️ Technologies & Frameworks
 
-- **Framework**: [React Native](https://reactnative.dev/) (Expo)
+### Core
+- **Framework**: [React Native](https://reactnative.dev/) (Expo SDK 52)
 - **Language**: TypeScript
-- **UI Library**: [HeroUI](https://www.heroui.com/) (Native), Tailwind CSS (NativeWind)
-- **Backend/Database**: Firebase (Auth, Firestore, Storage)
-- **AI/ML**: [Roboflow](https://roboflow.com/) (Computer Vision API)
-- **Navigation**: React Navigation
+- **Build Tool**: Expo Prebuild (CNG)
+
+### UI & UX
+- **Styling**: [NativeWind](https://www.nativewind.dev/) (Tailwind CSS)
+- **Components**: [HeroUI Native](https://www.heroui.com/)
+- **Animations**: [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/)
+- **Navigation**: React Navigation (Stack & Bottom Tabs)
 - **Icons**: Expo Vector Icons (Ionicons)
-- **Maps**: Leaflet (via `react-native-webview`)
+- **Custom UI**: `react-native-curved-bottom-bar`, `react-native-svg`
+
+### Backend & Services
+- **Database**: Firebase Firestore
+- **Authentication**: Firebase Auth & Google Sign-In
+- **Storage**: Firebase Storage
 
 ## 🤖 API Integration
 
 ### 1. Roboflow Inference API (Disease Detection)
-Used to analyze images of rice leaves and detect diseases like Rice Blast, Brown Spot, etc.
+Used to analyze images of rice leaves and detect diseases like *Rice Blast* and *Brown Spot*.
 - **Endpoint**: `https://serverless.roboflow.com`
-- **Configuration**: Requires API Key and Model ID in `src/config.ts`.
+- **Purpose**: Computer Vision & Image Classification.
 
 ### 2. Open-Meteo API (Weather)
-Fetches real-time weather data to provide agricultural insights.
+Fetches real-time weather data for the user's current location.
 - **Endpoint**: `https://api.open-meteo.com/v1/forecast`
-- **Features**: Current temperature, humidity, wind speed, cloud cover, and 7-day forecast.
-- **No API Key required.**
+- **Data**: Temperature, humidity, wind speed, and 7-day forecast.
 
-### 3. Google Translate (Dynamic Translation)
-Provides on-the-fly translation for dynamic content (like weather descriptions and disease advice) into Tagalog.
-- **Endpoint**: `https://translate.googleapis.com/translate_a/single` (Free endpoint)
-- **Usage**: Translates API responses that are returned in English.
+### 3. TimeAPI.io (Time Sync)
+Provides accurate local time information to sync the home screen widget.
+- **Endpoint**: `https://timeapi.io/api/Time/current/coordinate`
+- **Purpose**: Real-time clock synchronization.
 
-### 4. Expo Modules
-- **Expo Location**: Fetches user coordinates for local weather and mapping.
-- **Expo Image Picker**: Accesses camera and gallery for scanning leaves.
-- **Expo Media Library**: Saves scanned images and results to the device gallery.
+### 4. Saurav Hathi OTP Service (Verification)
+Handles secure email verification via alphanumeric One-Time Passwords (OTP).
+- **Service**: [OTP Service](https://github.com/sauravhathi/otp-service)
+- **Purpose**: verifying user email addresses during signup.
+
+### 5. Google Sign-In (OAuth)
+Native Google authentication integration.
+- **Service**: Google Identity Services
+- **Library**: `@react-native-google-signin/google-signin` v13.2.0
+
+### 6. Google Translate (Dynamic Translation)
+Provides on-the-fly translation for dynamic content into Tagalog.
+- **Endpoint**: `https://translate.googleapis.com/translate_a/single`
+
+### 7. Expo Modules
+- **Location**: Geolocation for weather data.
+- **ImagePicker**: Camera and gallery access.
+- **MediaLibrary**: Saving results.
+- **FileSystem**: File management.
 
 ## 🚀 How to Use
 

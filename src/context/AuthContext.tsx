@@ -1,7 +1,8 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { onAuthStateChanged, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithCredential, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { Alert } from 'react-native';
 import { auth, db } from '../config/firebase';
 
 import { OtpService } from '../services/OtpService';
@@ -40,6 +41,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         GoogleSignin.configure({
             webClientId: '155369869924-p9d5ifi4piijbudalddbq9bj4omla2i5.apps.googleusercontent.com',
+            offlineAccess: false,
+            scopes: ['profile', 'email'],
         });
 
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -110,19 +113,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signInWithGoogle = async () => {
         try {
-            // GoogleSignin.signIn() automatically handles Play Services check in v16+
-            // and uses Credential Manager (Bottom Sheet) where available.
-            const response = await GoogleSignin.signIn();
+            // v13: explicitly check play services
+            await GoogleSignin.hasPlayServices();
+            const userInfo: any = await GoogleSignin.signIn();
+            console.log("DEBUG: Google Sign-In Result:", JSON.stringify(userInfo));
 
-            if (response.type === 'cancelled') {
-                return; // User cancelled, do nothing
-            }
+            // Handle potential native version mismatch (v16 vs v13 bridge)
+            const userObj = userInfo.data || userInfo;
+            const idToken = userObj.idToken;
 
-            const wrapper = response.data;
-            if (!wrapper) throw new Error('No user data returned');
-
-            const idToken = wrapper.idToken;
-            if (!idToken) throw new Error('No ID token found');
+            if (!idToken) throw new Error(`No ID token found in response. keys: ${Object.keys(userObj)}`);
 
             const googleCredential = GoogleAuthProvider.credential(idToken);
             const res = await signInWithCredential(auth, googleCredential);
@@ -144,8 +144,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 await setDoc(docRef, newUser);
                 setUserData(newUser);
             }
-        } catch (error) {
-            // Re-throw to be handled by the UI
+        } catch (error: any) {
+            console.error('Google Sign-In Error:', error);
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                // user cancelled the login flow
+                return;
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+                // operation (e.g. sign in) is in progress already
+                Alert.alert('Sign In in progress');
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+                // play services not available or outdated
+                Alert.alert('Play Services not available');
+            } else {
+                // some other error happened
+                Alert.alert('Google Sign-In Error', `Code: ${error.code}\nMessage: ${error.message}\nRaw: ${JSON.stringify(error)}`);
+            }
             throw error;
         }
     };
