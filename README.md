@@ -105,6 +105,15 @@ Provides on-the-fly translation for dynamic content into Tagalog.
 - **Authentication**: Secure login, signup, and profile management using Firebase.
 - **Dark Mode**: Fully supported dark theme for low-light usage.
 
+## 🎨 UI & Code Repositories
+This project builds upon these excellent open-source repositories:
+
+- **Saurav Hathi OTP Service**: [otp-service](https://github.com/sauravhathi/otp-service)
+- **Curved Bottom Bar**: [react-native-curved-bottom-bar](https://github.com/hoaphantn7604/react-native-curved-bottom-bar)
+- **HeroUI**: [heroui-inc/heroui](https://github.com/heroui-inc/heroui)
+- **NativeWind**: [nativewind/nativewind](https://github.com/nativewind/nativewind)
+- **React Native Reanimated**: [software-mansion/react-native-reanimated](https://github.com/software-mansion/react-native-reanimated)
+
 ## 📄 License
 
 This project is open-source and available under the MIT License.
