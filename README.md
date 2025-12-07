@@ -59,6 +59,11 @@ Provides on-the-fly translation for dynamic content into Tagalog.
 - **MediaLibrary**: Saving results.
 - **FileSystem**: File management.
 
+### 8. Maps & Location
+- **Expo Location**: Device GPS coordinates.
+- **Leaflet (WebView)**: Interactive map interface.
+- **OpenStreetMap**: Map tiles and data.
+
 ## 🚀 How to Use
 
 ### Prerequisites
