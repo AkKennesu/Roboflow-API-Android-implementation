@@ -47,7 +47,19 @@ export const AuthScreen = () => {
             }
             // Navigation is handled automatically
         } catch (error: any) {
-            Alert.alert('Authentication Failed', getFriendlyErrorMessage(error));
+            const errorCode = error.code;
+            if (errorCode === 'auth/user-not-found' || errorCode === 'auth/invalid-credential') {
+                Alert.alert(
+                    'Account Not Found',
+                    'It looks like you don\'t have an account yet. Would you like to sign up?',
+                    [
+                        { text: 'Cancel', style: 'cancel' },
+                        { text: 'Sign Up', onPress: () => setIsLogin(false) }
+                    ]
+                );
+            } else {
+                Alert.alert('Authentication Failed', getFriendlyErrorMessage(error));
+            }
         } finally {
             setLoading(false);
         }
@@ -72,59 +84,75 @@ export const AuthScreen = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#ffffff' }}>
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-                <ScrollView
-                    contentContainerStyle={{ flexGrow: 1, padding: 24, justifyContent: 'center' }}
-                    keyboardShouldPersistTaps="handled"
-                    showsVerticalScrollIndicator={false}
-                >
+        <View style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#ffffff' }}>
+            {/* Top Background Section (40%) */}
+            <View
+                className={`absolute top-0 left-0 right-0 h-[40%] ${darkMode ? "bg-green-900/20" : "bg-green-50"}`}
+                style={{ borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }}
+            />
 
-                    {/* Header */}
-                    <View className="items-center mb-6">
-                        <View className={`w-20 h-20 rounded-3xl items-center justify-center mb-4 rotate-3 ${darkMode ? "bg-green-900/30" : "bg-green-100"}`}>
-                            <Ionicons name="leaf" size={40} color={darkMode ? "#4ade80" : "#22c55e"} />
-                        </View>
-                        <Text className={`text-3xl font-bold text-center ${darkMode ? "text-white" : "text-gray-800"}`}>
-                            {isLogin ? 'Welcome Back!' : 'Create Account'}
-                        </Text>
-                        <Text className={`text-center mt-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                            {isLogin ? 'Sign in to continue your farming journey' : 'Join us and start detecting rice diseases'}
-                        </Text>
-                    </View>
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 24, justifyContent: 'flex-start', paddingTop: 60 }}
+                        keyboardShouldPersistTaps="handled"
+                        showsVerticalScrollIndicator={false}
+                    >
 
-                    <AuthForm
-                        isLogin={isLogin}
-                        name={name}
-                        setName={setName}
-                        email={email}
-                        setEmail={setEmail}
-                        password={password}
-                        setPassword={setPassword}
-                        loading={loading}
-                        handleAuth={handleAuth}
-                        darkMode={darkMode}
-                    />
-
-                    <SocialAuth
-                        handleGoogleAuth={handleGoogleAuth}
-                        darkMode={darkMode}
-                    />
-
-                    {/* Toggle */}
-                    <View className="flex-row justify-center mt-8">
-                        <Text className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                            {isLogin ? "Don't have an account? " : "Already have an account? "}
-                        </Text>
-                        <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
-                            <Text className={`font-bold ${darkMode ? "text-green-400" : "text-green-600"}`}>
-                                {isLogin ? 'Sign Up' : 'Sign In'}
+                        {/* Logo & Title */}
+                        <View className="items-center mb-6">
+                            <View className={`w-20 h-20 rounded-full items-center justify-center mb-4 shadow-lg ${darkMode ? "bg-green-600 shadow-green-900/30" : "bg-green-500 shadow-green-200"}`}>
+                                <Ionicons name="leaf" size={32} color="white" />
+                            </View>
+                            <Text
+                                className={`text-xl font-bold text-center ${darkMode ? "text-green-400" : "text-green-600"}`}
+                                numberOfLines={1}
+                                adjustsFontSizeToFit
+                            >
+                                {isLogin ? 'Welcome Back' : 'Sign Up'}
                             </Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
 
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+                        <AuthForm
+                            isLogin={isLogin}
+                            name={name}
+                            setName={setName}
+                            email={email}
+                            setEmail={setEmail}
+                            password={password}
+                            setPassword={setPassword}
+                            loading={loading}
+                            handleAuth={handleAuth}
+                            darkMode={darkMode}
+                        />
+
+                        <SocialAuth
+                            handleGoogleAuth={handleGoogleAuth}
+                            darkMode={darkMode}
+                        />
+
+                        {/* Footer Toggle */}
+                        <View className="flex-row justify-center mt-6">
+                            <Text className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                            </Text>
+                            <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
+                                <Text className={`font-bold underline ${darkMode ? "text-green-400" : "text-green-600"}`}>
+                                    {isLogin ? 'Sign Up' : 'Login'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Terms */}
+                        <View className="mt-auto mb-6">
+                            <Text className={`text-xs text-center ${darkMode ? "text-gray-500" : "text-gray-400"}`}>
+                                I accept App's <Text className="underline">Terms of User</Text> and <Text className="underline">Privacy Policy</Text>.
+                            </Text>
+                        </View>
+
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+        </View>
     );
 };

@@ -168,10 +168,6 @@ export const ProfileSidebar = ({ visible, onClose }: ProfileSidebarProps) => {
                 duration: 300,
                 easing: Easing.in(Easing.cubic),
                 useNativeDriver: true,
-            }).start(({ finished }) => {
-                if (finished) {
-                    setShowModal(false);
-                }
             });
         }
     }, [visible]);
@@ -179,7 +175,7 @@ export const ProfileSidebar = ({ visible, onClose }: ProfileSidebarProps) => {
     const handleLogout = async () => {
         await logout();
         onClose();
-        navigation.replace('Auth');
+        // Navigation is handled automatically by AppNavigator
     };
 
     const menuItems = [
@@ -188,8 +184,6 @@ export const ProfileSidebar = ({ visible, onClose }: ProfileSidebarProps) => {
         { icon: 'settings-outline', label: t.settings, screen: 'Settings' },
         { icon: 'moon-outline', label: t.darkMode, isDarkMode: true },
     ];
-
-    if (!showModal) return null;
 
     return (
         <Modal transparent visible={showModal} animationType="none" onRequestClose={onClose}>

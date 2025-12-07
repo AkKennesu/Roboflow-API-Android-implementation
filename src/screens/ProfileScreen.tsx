@@ -14,7 +14,7 @@ export const ProfileScreen = () => {
 
     const handleLogout = async () => {
         await logout();
-        navigation.replace('Auth');
+        // Navigation is handled automatically by AppNavigator
     };
 
     const menuItems = [

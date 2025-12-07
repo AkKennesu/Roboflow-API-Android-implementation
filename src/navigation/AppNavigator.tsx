@@ -17,7 +17,7 @@ import { HistoryDetailScreen } from '../screens/HistoryDetailScreen';
 const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
-    const { user, loading } = useAuth();
+    const { user, userData, loading } = useAuth();
 
     if (loading) {
         return (
@@ -30,7 +30,9 @@ export const AppNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             {user ? (
-                user.emailVerified ? (
+                // Google Sign In (isVerified=true) or OTP verified (isVerified=true)
+                // Note: user.emailVerified is from Firebase link, we now use userData.isVerified
+                (userData?.isVerified || user.emailVerified) ? (
                     <>
                         <Stack.Screen name="Main" component={TabNavigator} />
                         <Stack.Screen name="DiseaseDetail" component={DiseaseDetailScreen} />
