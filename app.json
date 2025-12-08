@@ -22,7 +22,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.knnsu.LeafDetective",
+      "package": "com.knnsu.RiceDiseaseDetector",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
