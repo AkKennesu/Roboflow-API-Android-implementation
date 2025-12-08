@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Leaf Detective",
-    "slug": "LeafDetective",
+    "slug": "RiceDiseaseDetector",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/leaf-detective-icon.png",
