@@ -8,10 +8,11 @@ interface SavedNotesModalProps {
     savedNotes: any[];
     isLoadingNotes: boolean;
     handleDeleteNote: (id: string) => void;
+    onNotePress: (note: any) => void;
     darkMode: boolean;
 }
 
-export const SavedNotesModal = ({ visible, onClose, savedNotes, isLoadingNotes, handleDeleteNote, darkMode }: SavedNotesModalProps) => {
+export const SavedNotesModal = ({ visible, onClose, savedNotes, isLoadingNotes, handleDeleteNote, onNotePress, darkMode }: SavedNotesModalProps) => {
     const formatDate = (timestamp: any) => {
         if (!timestamp) return '';
         const date = timestamp.toDate();
@@ -46,7 +47,10 @@ export const SavedNotesModal = ({ visible, onClose, savedNotes, isLoadingNotes, 
                                 </Text>
                             }
                             renderItem={({ item }) => (
-                                <View className={`mb-3 p-3 rounded-xl border ${darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'}`}>
+                                <TouchableOpacity
+                                    className={`mb-3 p-3 rounded-xl border ${darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'}`}
+                                    onPress={() => onNotePress(item)}
+                                >
                                     <View className="flex-row justify-between items-start">
                                         <View className="flex-1 mr-2">
                                             <Text className={`font-semibold mb-1 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
@@ -67,7 +71,7 @@ export const SavedNotesModal = ({ visible, onClose, savedNotes, isLoadingNotes, 
                                             <Ionicons name="trash-outline" size={20} color="#ef4444" />
                                         </TouchableOpacity>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             )}
                         />
                     )}

@@ -6,9 +6,17 @@ interface ForecastListProps {
     weather: any;
     darkMode: boolean;
     t: any;
+    unit: 'celsius' | 'fahrenheit';
 }
 
-export const ForecastList = ({ weather, darkMode, t }: ForecastListProps) => {
+export const ForecastList = ({ weather, darkMode, t, unit }: ForecastListProps) => {
+    const getTemperature = (celsius: number) => {
+        if (unit === 'fahrenheit') {
+            return Math.round((celsius * 9 / 5) + 32);
+        }
+        return Math.round(celsius);
+    };
+
     return (
         <>
             <Text className={`text-xl font-bold mb-4 ${darkMode ? "text-white" : "text-gray-800"}`}>{t.forecast}</Text>
@@ -19,10 +27,10 @@ export const ForecastList = ({ weather, darkMode, t }: ForecastListProps) => {
                     </Text>
                     <View className="flex-row items-center gap-4">
                         <Text className={`font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>
-                            {Math.round(weather.daily.temperature_2m_max[index])}°
+                            {getTemperature(weather.daily.temperature_2m_max[index])}°
                         </Text>
                         <Text className="text-gray-400">
-                            {Math.round(weather.daily.temperature_2m_min[index])}°
+                            {getTemperature(weather.daily.temperature_2m_min[index])}°
                         </Text>
                     </View>
                     <View className="flex-row items-center w-16 justify-end">

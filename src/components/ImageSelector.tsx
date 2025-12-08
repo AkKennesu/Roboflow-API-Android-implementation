@@ -19,7 +19,7 @@ export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, s
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: 'Images' as any,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: false,
             quality: 0.8,
         });
@@ -37,7 +37,7 @@ export const ImageSelector: React.FC<ImageSelectorProps> = ({ onImageSelected, s
         }
 
         let result = await ImagePicker.launchCameraAsync({
-            mediaTypes: 'Images' as any,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: false,
             quality: 0.8,
         });

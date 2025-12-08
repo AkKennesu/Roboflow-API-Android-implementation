@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../config/firebase';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+// import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Removed
+// import { storage } from '../config/firebase'; // Removed
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -24,7 +25,7 @@ export const EditProfileScreen = () => {
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: 'Images' as any,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 0.5,
@@ -35,18 +36,16 @@ export const EditProfileScreen = () => {
         }
     };
 
-    const uploadImage = async (uri: string) => {
+    const convertAvatarToBase64 = async (uri: string): Promise<string> => {
         try {
-            const response = await fetch(uri);
-            const blob = await response.blob();
-            const filename = `profile_pictures/${userData?.uid || 'unknown'}_${Date.now()}.jpg`;
-            const storageRef = ref(storage, filename);
-
-            await uploadBytes(storageRef, blob);
-            const downloadURL = await getDownloadURL(storageRef);
-            return downloadURL;
+            const manipResult = await manipulateAsync(
+                uri,
+                [{ resize: { width: 300, height: 300 } }], // Resize for avatar usage
+                { compress: 0.5, format: SaveFormat.JPEG, base64: true }
+            );
+            return `data:image/jpeg;base64,${manipResult.base64}`;
         } catch (error) {
-            console.error("Error uploading image: ", error);
+            console.error("Error converting avatar to base64:", error);
             throw error;
         }
     };
@@ -57,7 +56,7 @@ export const EditProfileScreen = () => {
             let avatar = userData?.avatar;
 
             if (image) {
-                avatar = await uploadImage(image);
+                avatar = await convertAvatarToBase64(image);
             }
 
             await updateUserData({ name, avatar });

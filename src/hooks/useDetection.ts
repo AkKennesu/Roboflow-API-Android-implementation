@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { detectDisease, Prediction } from '../services/api';
 
-export const useDetection = (confidenceThreshold: number, t: any) => {
+export const useDetection = (confidenceThreshold: number, t: any, crop: 'rice' | 'mango' | 'soil' | 'corn' = 'rice') => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [predictions, setPredictions] = useState<Prediction[] | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -15,7 +15,7 @@ export const useDetection = (confidenceThreshold: number, t: any) => {
 
         try {
             // Convert decimal threshold (e.g. 0.75) to percentage (75) for API
-            const results = await detectDisease(uri, Math.round(confidenceThreshold * 100));
+            const results = await detectDisease(uri, Math.round(confidenceThreshold * 100), crop);
             setPredictions(results);
         } catch (err) {
             setError(t.failedToAnalyze);

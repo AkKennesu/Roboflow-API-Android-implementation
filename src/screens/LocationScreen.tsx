@@ -184,6 +184,37 @@ export const LocationScreen = () => {
     );
   };
 
+  const handleNotePress = (savedNote: any) => {
+    setNotesModalVisible(false); // Close modal
+
+    // Update local location state to reflect the selected note
+    const newLocation = {
+      ...location,
+      coords: {
+        ...location?.coords,
+        latitude: savedNote.latitude,
+        longitude: savedNote.longitude,
+      }
+    } as Location.LocationObject;
+
+    setLocation(newLocation);
+
+    // Update Map View via WebView Injection
+    const injectScript = `
+      map.setView([${savedNote.latitude}, ${savedNote.longitude}], 15);
+      if (typeof marker !== 'undefined') {
+        marker.setLatLng([${savedNote.latitude}, ${savedNote.longitude}])
+          .bindPopup('${savedNote.note}')
+          .openPopup();
+      } else {
+        marker = L.marker([${savedNote.latitude}, ${savedNote.longitude}]).addTo(map)
+          .bindPopup('${savedNote.note}')
+          .openPopup();
+      }
+    `;
+    webViewRef.current?.injectJavaScript(injectScript);
+  };
+
   if (!location) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: darkMode ? '#111827' : '#f9fafb' }} className="items-center justify-center">
@@ -247,9 +278,9 @@ export const LocationScreen = () => {
         savedNotes={savedNotes}
         isLoadingNotes={isLoadingNotes}
         handleDeleteNote={handleDeleteNote}
+        onNotePress={handleNotePress}
         darkMode={darkMode}
       />
     </SafeAreaView>
   );
 };
-

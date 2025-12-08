@@ -17,7 +17,7 @@ export const translations = {
 
         // Home
         home: 'Home',
-        ricePlantDiseases: 'Rice Plant Diseases',
+        ricePlantDiseases: 'Diseases',
         dictionary: 'Dictionary',
         camera: 'Camera',
         scan: 'Scan',
@@ -53,7 +53,7 @@ export const translations = {
         scanDetails: 'Scan Details',
 
         // Detection
-        detectorTitle: 'Rice Disease Detector',
+        detectorTitle: 'Camera Detector',
         selectPhoto: 'Select a photo of a rice plant leaf to detect diseases.',
         failedToAnalyze: 'Failed to analyze image. Please check your internet connection and try again.',
         analyzing: 'Analyzing image...',
@@ -102,7 +102,7 @@ export const translations = {
 
         // Home
         home: 'Tahanan',
-        ricePlantDiseases: 'Sakit ng Palay',
+        ricePlantDiseases: 'Mga Sakit',
         dictionary: 'Diksyunaryo',
         camera: 'Kamera',
         scan: 'I-scan',
@@ -138,7 +138,7 @@ export const translations = {
         scanDetails: 'Detalye ng Scan',
 
         // Detection
-        detectorTitle: 'Detektor ng Sakit sa Palay',
+        detectorTitle: 'Camera Detector',
         selectPhoto: 'Pumili ng larawan ng dahon ng palay upang matukoy ang sakit.',
         failedToAnalyze: 'Nabigong suriin ang larawan. Pakisuri ang iyong koneksyon sa internet at subukang muli.',
         analyzing: 'Sinusuri ang larawan...',

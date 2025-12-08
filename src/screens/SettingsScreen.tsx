@@ -11,10 +11,11 @@ import { PhotoStorageSection } from '../components/settings/PhotoStorageSection'
 import { ConfidenceSection } from '../components/settings/ConfidenceSection';
 import { TipsSection } from '../components/settings/TipsSection';
 import { TipModal } from '../components/settings/TipModal';
+import { TemperatureSection } from '../components/settings/TemperatureSection';
 
 export const SettingsScreen = () => {
     const navigation = useNavigation();
-    const { confidenceThreshold, setConfidenceThreshold, autoSavePhotos, setAutoSavePhotos, darkMode } = useSettings();
+    const { confidenceThresholds, setConfidenceThreshold, autoSavePhotos, setAutoSavePhotos, darkMode, temperatureUnit, setTemperatureUnit } = useSettings();
     const [selectedTip, setSelectedTip] = useState<{ title: string; type: 'list' | 'text'; content: string | string[] } | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -79,8 +80,14 @@ AkKennesu`
                 />
 
                 <ConfidenceSection
-                    confidenceThreshold={confidenceThreshold}
+                    confidenceThresholds={confidenceThresholds}
                     setConfidenceThreshold={setConfidenceThreshold}
+                    darkMode={darkMode}
+                />
+
+                <TemperatureSection
+                    temperatureUnit={temperatureUnit}
+                    setTemperatureUnit={setTemperatureUnit}
                     darkMode={darkMode}
                 />
 

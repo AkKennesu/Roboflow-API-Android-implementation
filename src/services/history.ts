@@ -1,15 +1,12 @@
 import { collection, addDoc, query, where, orderBy, getDocs, Timestamp, deleteDoc, doc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
-import { db, storage } from '../config/firebase';
+import { db } from '../config/firebase';
 import { Prediction } from './api';
 
 export interface HistoryItem {
     id: string;
     userId: string;
-    imageUrl: string; // We might need to upload the image to storage first, or store base64 (not recommended for large scale)
-    // For now, let's assume we store the local URI or a placeholder if not uploaded. 
-    // Ideally, we should upload to Firebase Storage.
+    imageUrl: string;
     predictions: Prediction[];
     timestamp: number;
     date: string;
@@ -28,38 +25,6 @@ export const convertImageToBase64 = async (uri: string): Promise<string> => {
         throw error;
     }
 };
-
-// export const uploadImage = async (uri: string, userId: string): Promise<string> => {
-//     try {
-//         // 1. Resize and Compress
-//         const manipResult = await manipulateAsync(
-//             uri,
-//             [{ resize: { width: 800 } }], // Resize to max width 800px
-//             { compress: 0.7, format: SaveFormat.JPEG }
-//         );
-// 
-//         // 2. Fetch blob
-//         console.log("Fetching blob from:", manipResult.uri);
-//         const response = await fetch(manipResult.uri);
-//         const blob = await response.blob();
-//         console.log("Blob created, size:", blob.size);
-// 
-//         // 3. Upload to Firebase Storage
-//         const filename = `${userId}/${Date.now()}.jpg`;
-//         const storageRef = ref(storage, `history_images/${filename}`);
-// 
-//         console.log("Starting upload to:", storageRef.fullPath);
-//         const result = await uploadBytes(storageRef, blob);
-//         console.log("Upload complete, metadata:", result.metadata);
-// 
-//         // 4. Get Download URL
-//         const downloadURL = await getDownloadURL(storageRef);
-//         return downloadURL;
-//     } catch (error) {
-//         console.error("Error uploading image:", error);
-//         throw error;
-//     }
-// };
 
 export const saveDetectionResult = async (userId: string, imageUri: string, predictions: Prediction[]) => {
     try {

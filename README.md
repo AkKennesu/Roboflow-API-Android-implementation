@@ -1,6 +1,6 @@
 # Rice Disease Detector
 
-A React Native application powered by Roboflow for detecting diseases in rice plants. This app allows users to scan rice plant leaves, detect diseases, view detailed treatment recommendations, and track their scan history. It also features real-time weather updates, AI-driven disease advice, and multi-language support (English/Tagalog).
+A React Native application powered by Roboflow for detecting diseases in rice plants, mango trees, and corn, as well as identifying soil types. This app allows users to scan plants, detect diseases, view detailed treatment recommendations, and track their scan history. It also features real-time weather updates, AI-driven disease advice, and multi-language support (English/Tagalog).
 
 ## 🛠️ Technologies & Frameworks
 
@@ -96,7 +96,7 @@ Provides on-the-fly translation for dynamic content into Tagalog.
 
 ## 📱 Features
 
-- **Disease Detection**: Real-time detection of Rice Blast, Bacterial Leaf Blight, Brown Spot, etc.
+- **Disease Detection**: Real-time detection of Rice Blast, Bacterial Leaf Blight, Brown Spot, Mango leaves, Soil types, and Corn diseases (**new!**).
 - **AI Disease Adviser**: Provides advice based on current weather conditions to prevent disease outbreaks.
 - **Multi-Language Support**: Full support for English and Tagalog (UI and Dynamic Content).
 - **Detailed Info**: View causes, treatments, and prevention tips for detected diseases.

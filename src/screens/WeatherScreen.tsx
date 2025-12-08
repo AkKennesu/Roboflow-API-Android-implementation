@@ -47,7 +47,7 @@ export const WeatherScreen = () => {
     const [translatedAdvice, setTranslatedAdvice] = useState<{ risk: string, advice: string } | null>(null);
     const [weatherDescription, setWeatherDescription] = useState<string>('');
 
-    const { darkMode, language, translations: t } = useSettings();
+    const { darkMode, language, translations: t, temperatureUnit } = useSettings();
     const navigation = useNavigation();
 
     const fetchData = async () => {
@@ -221,6 +221,7 @@ export const WeatherScreen = () => {
                             weatherDescription={weatherDescription}
                             darkMode={darkMode}
                             t={t}
+                            unit={temperatureUnit}
                         />
 
                         <DiseaseAdviceCard
@@ -241,6 +242,7 @@ export const WeatherScreen = () => {
                             weather={weather}
                             darkMode={darkMode}
                             t={t}
+                            unit={temperatureUnit}
                         />
                     </>
                 )}

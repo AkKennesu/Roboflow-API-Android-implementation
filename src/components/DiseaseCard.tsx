@@ -14,6 +14,8 @@ export const DiseaseCard = ({ disease, darkMode, onPress }: DiseaseCardProps) =>
             case 'Fungal': return 'leaf';
             case 'Bacterial': return 'water';
             case 'Healthy': return 'happy-outline';
+            case 'Ripeness': return 'nutrition'; // More appropriate for fruit
+            case 'Soil': return 'earth'; // Earth icon for soil
             default: return 'bug';
         }
     };
@@ -23,6 +25,8 @@ export const DiseaseCard = ({ disease, darkMode, onPress }: DiseaseCardProps) =>
             case 'Fungal': return '#3b82f6';
             case 'Bacterial': return '#22c55e';
             case 'Healthy': return '#22c55e';
+            case 'Ripeness': return '#eab308'; // Yellow/Orange for mango
+            case 'Soil': return '#78350f'; // Brown for soil
             default: return '#ef4444';
         }
     };
@@ -32,6 +36,8 @@ export const DiseaseCard = ({ disease, darkMode, onPress }: DiseaseCardProps) =>
             case 'Fungal': return darkMode ? 'bg-blue-900/30' : 'bg-blue-100';
             case 'Bacterial': return darkMode ? 'bg-green-900/30' : 'bg-green-100';
             case 'Healthy': return darkMode ? 'bg-green-900/30' : 'bg-green-100';
+            case 'Ripeness': return darkMode ? 'bg-yellow-900/30' : 'bg-yellow-100';
+            case 'Soil': return darkMode ? 'bg-stone-800' : 'bg-stone-100'; // Stone/brownish bg
             default: return darkMode ? 'bg-red-900/30' : 'bg-red-100';
         }
     };

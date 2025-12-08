@@ -145,7 +145,7 @@ export const TabNavigator = () => {
                 height={75}
                 circleWidth={60}
                 bgColor={darkMode ? '#020617' : '#dcfce7'}
-                initialRouteName="DiseasesTab"
+                initialRouteName="CameraTab"
                 borderTopLeftRight
                 renderCircle={({ navigate }: any) => (
                     <FloatingCameraButton navigate={navigate} />
