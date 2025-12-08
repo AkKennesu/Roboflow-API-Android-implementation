@@ -1,6 +1,6 @@
-# Rice Disease Detector
+# Leaf Detective
 
-A React Native application powered by Roboflow for detecting diseases in rice plants, mango trees, and corn, as well as identifying soil types. This app allows users to scan plants, detect diseases, view detailed treatment recommendations, and track their scan history. It also features real-time weather updates, AI-driven disease advice, and multi-language support (English/Tagalog).
+A React Native application powered by Roboflow for detecting diseases in plants. This app allows users to scan rice, corn, and mango leaves, as well as identify soil types, to detect diseases, view detailed treatment recommendations, and track their scan history. It also features real-time weather updates, AI-driven disease advice, and multi-language support (English/Tagalog).
 
 ## 🛠️ Technologies & Frameworks
 

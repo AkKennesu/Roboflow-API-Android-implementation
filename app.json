@@ -39,8 +39,8 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow RiceDiseaseDetector to save photos to your gallery.",
-          "savePhotosPermission": "Allow RiceDiseaseDetector to save photos to your gallery.",
+          "photosPermission": "Allow Leaf Detective to save photos to your gallery.",
+          "savePhotosPermission": "Allow Leaf Detective to save photos to your gallery.",
           "isAccessMediaLocationEnabled": true
         }
       ],
